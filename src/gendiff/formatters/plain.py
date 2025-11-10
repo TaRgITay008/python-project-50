@@ -10,29 +10,24 @@ def format_value(value):
     return f"'{value}'"
 
 
-def format_plain(diff, path=''):
+def build_plain(diff, path=''):
     lines = []
     
-    # Получаем список узлов из diff
-    # diff может быть либо списком узлов, либо словарем с ключом 'children'
-    if isinstance(diff, dict) and 'children' in diff:
-        nodes = diff['children']
-    else:
-        nodes = diff
-    
-    for node in nodes:
-        current_path = f"{path}.{node['key']}" if path else node['key']
+    for node in diff:
+        key = node['key']
+        current_path = f"{path}.{key}" if path else key
+        node_type = node['type']
         
-        if node['type'] == 'nested':
-            lines.extend(format_plain(node['children'], current_path))
-        elif node['type'] == 'added':
+        if node_type == 'nested':
+            lines.extend(build_plain(node['children'], current_path))
+        elif node_type == 'added':
             value = format_value(node['value'])
             lines.append(
                 f"Property '{current_path}' was added with value: {value}"
             )
-        elif node['type'] == 'removed':
+        elif node_type == 'removed':
             lines.append(f"Property '{current_path}' was removed")
-        elif node['type'] == 'updated':
+        elif node_type == 'updated':
             old_value = format_value(node['old_value'])
             new_value = format_value(node['new_value'])
             lines.append(
@@ -43,5 +38,5 @@ def format_plain(diff, path=''):
 
 
 def render_plain(diff):
-    result = format_plain(diff)
+    result = build_plain(diff)
     return '\n'.join(result)
