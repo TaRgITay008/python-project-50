@@ -2,7 +2,7 @@
 import argparse
 from hexlet_code.parsers.parser import parse_file
 from hexlet_code.diff_builder import build_diff
-from hexlet_code.formatters import format_stylish, format_plain
+from hexlet_code.formatters import format_stylish, format_plain, format_json
 
 
 def get_formatter(format_name):
@@ -10,6 +10,7 @@ def get_formatter(format_name):
     formatters = {
         'stylish': format_stylish,
         'plain': format_plain,
+        'json': format_json,
     }
     return formatters.get(format_name)
 

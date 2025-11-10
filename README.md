@@ -15,3 +15,37 @@ uv sync
 
 # Или установка пакета глобально (после сборки)
 uv tool install .
+### JSON формат
+
+```bash
+uv run gendiff -f json file1.json file2.json
+```
+
+Вывод (пример структуры):
+```json
+{
+  "common": {
+    "type": "nested",
+    "children": {
+      "follow": {
+        "type": "added", 
+        "value": false
+      },
+      "setting1": {
+        "type": "unchanged",
+        "value": "Value 1"
+      },
+      "setting2": {
+        "type": "removed", 
+        "value": 200
+      },
+      "setting3": {
+        "type": "changed",
+        "old_value": true,
+        "new_value": null
+      }
+    }
+  }
+}
+```
+
