@@ -49,3 +49,17 @@ uv run gendiff -f json file1.json file2.json
 }
 ```
 
+## Демонстрация
+
+### Asciinema запись
+
+[![asciicast](https://asciinema.org/a/Pe6QypnLEmFWssNAjCOJN1iii.svg)](https://asciinema.org/a/Pe6QypnLEmFWssNAjCOJN1iii)
+
+*Демонстрация показывает работу всех трех форматов вывода: stylish, plain и json*
+
+### Примеры вывода
+
+#### Stylish формат (по умолчанию)
+
+```bash
+uv run gendiff file1.json file2.json
