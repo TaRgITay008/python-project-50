@@ -13,7 +13,13 @@ def format_value(value):
 def build_plain(diff, path=''):
     lines = []
     
-    for node in diff:
+    # Если diff - это корневой узел (словарь с children), берем children
+    if isinstance(diff, dict) and 'children' in diff:
+        nodes = diff['children']
+    else:
+        nodes = diff
+    
+    for node in nodes:
         key = node['key']
         current_path = f"{path}.{key}" if path else key
         node_type = node['type']
