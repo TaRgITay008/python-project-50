@@ -1,16 +1,26 @@
 def format_value(value):
+    if isinstance(value, (dict, list)):
+        return '[complex value]'
     if isinstance(value, bool):
         return str(value).lower()
     if value is None:
         return 'null'
     if isinstance(value, (int, float)):
         return str(value)
-    return value
+    return f"'{value}'"
 
 
 def format_plain(diff, path=''):
     lines = []
-    for node in diff:
+    
+    # Получаем список узлов из diff
+    # diff может быть либо списком узлов, либо словарем с ключом 'children'
+    if isinstance(diff, dict) and 'children' in diff:
+        nodes = diff['children']
+    else:
+        nodes = diff
+    
+    for node in nodes:
         current_path = f"{path}.{node['key']}" if path else node['key']
         
         if node['type'] == 'nested':
@@ -28,7 +38,6 @@ def format_plain(diff, path=''):
             lines.append(
                 f"Property '{current_path}' was updated. From {old_value} to {new_value}"
             )
-        # unchanged nodes are skipped in plain format
     
     return lines
 
