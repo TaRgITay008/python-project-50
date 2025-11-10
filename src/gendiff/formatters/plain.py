@@ -33,10 +33,11 @@ def build_plain(diff, path=''):
             lines.append(
                 f"Property '{current_path}' was updated. From {old_value} to {new_value}"
             )
+        # unchanged nodes are skipped in plain format
     
     return lines
 
 
-def render_plain(diff):
+def format_plain(diff):
     result = build_plain(diff)
     return '\n'.join(result)
