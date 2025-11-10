@@ -1,11 +1,31 @@
 #!/usr/bin/env python3
 import argparse
+import json
 
 
-def generate_diff(file1, file2, format_name='stylish'):
+def parse_file(file_path):
+    """Read and parse JSON file."""
+    with open(file_path) as file:
+        return json.load(file)
+
+
+def generate_diff(file1_path, file2_path, format_name='stylish'):
     """Generate diff between two files."""
-    # Пока заглушка - реализуем на следующих шагах
-    return f"Diff between {file1} and {file2} in {format_name} format"
+    data1 = parse_file(file1_path)
+    data2 = parse_file(file2_path)
+    
+    # Детальная информация о данных
+    print("=== First File ===")
+    for key, value in data1.items():
+        print(f"  {key}: {value} (type: {type(value).__name__})")
+    
+    print("=== Second File ===")
+    for key, value in data2.items():
+        print(f"  {key}: {value} (type: {type(value).__name__})")
+    
+    print(f"Output format: {format_name}")
+    
+    return "Files parsed successfully"
 
 
 def main():
