@@ -13,42 +13,25 @@ def format_value(value):
 def build_plain(diff, path=''):
     lines = []
     
-    # diff - это словарь, где ключи это имена групп, а значения содержат 'children'
-    if isinstance(diff, dict):
-        # Собираем все узлы из всех групп
-        all_nodes = []
-        for group_name, group_data in diff.items():
-            if isinstance(group_data, dict) and 'children' in group_data:
-                # Добавляем узлы из этой группы
-                for node in group_data['children']:
-                    all_nodes.append(node)
+    # Сортируем ключи для консистентности
+    for key in sorted(diff.keys()):
+        node = diff[key]
+        node_type = node['type']
+        current_path = f"{path}.{key}" if path else key
         
-        # Теперь обрабатываем все узлы
-        for node in all_nodes:
-            if not isinstance(node, dict) or 'key' not in node:
-                continue
-                
-            key = node['key']
-            current_path = f"{path}.{key}" if path else key
-            node_type = node.get('type')
-            
-            if node_type == 'nested':
-                children = node.get('children', [])
-                lines.extend(build_plain({f"nested_{key}": {'children': children}}, current_path))
-            elif node_type == 'added':
-                value = format_value(node['value'])
-                lines.append(
-                    f"Property '{current_path}' was added with value: {value}"
-                )
-            elif node_type == 'removed':
-                lines.append(f"Property '{current_path}' was removed")
-            elif node_type == 'updated':
-                old_value = format_value(node['old_value'])
-                new_value = format_value(node['new_value'])
-                lines.append(
-                    f"Property '{current_path}' was updated. From {old_value} to {new_value}"
-                )
-            # unchanged nodes are skipped in plain format
+        if node_type == 'nested':
+            # Рекурсивно обрабатываем вложенные узлы
+            lines.extend(build_plain(node['children'], current_path))
+        elif node_type == 'added':
+            value = format_value(node['value'])
+            lines.append(f"Property '{current_path}' was added with value: {value}")
+        elif node_type == 'removed':
+            lines.append(f"Property '{current_path}' was removed")
+        elif node_type == 'changed':
+            old_value = format_value(node['old_value'])
+            new_value = format_value(node['new_value'])
+            lines.append(f"Property '{current_path}' was updated. From {old_value} to {new_value}")
+        # unchanged nodes are skipped in plain format
     
     return lines
 
