@@ -1,19 +1,13 @@
 #!/usr/bin/env python3
 import argparse
-import json
-
-
-def parse_file(file_path):
-    """Read and parse JSON file."""
-    with open(file_path) as file:
-        return json.load(file)
+from hexlet_code.parsers.parser import parse_file
 
 
 def build_diff(data1, data2):
     """Build diff between two dictionaries."""
     keys = sorted(set(data1.keys()) | set(data2.keys()))
     diff = {}
-    
+
     for key in keys:
         if key not in data2:
             diff[key] = {'type': 'removed', 'value': data1[key]}
@@ -23,11 +17,21 @@ def build_diff(data1, data2):
             diff[key] = {'type': 'unchanged', 'value': data1[key]}
         else:
             diff[key] = {
-                'type': 'changed', 
-                'old_value': data1[key], 
+                'type': 'changed',
+                'old_value': data1[key],
                 'new_value': data2[key]
             }
     return diff
+
+
+def format_value(value):
+    """Format value for stylish output."""
+    if isinstance(value, bool):
+        return str(value).lower()
+    elif value is None:
+        return 'null'
+    else:
+        return value
 
 
 def format_stylish(diff):
@@ -55,22 +59,13 @@ def format_stylish(diff):
     return '{\n' + '\n'.join(lines) + '\n}'
 
 
-def format_value(value):
-    """Format value for stylish output."""
-    if isinstance(value, bool):
-        return str(value).lower()
-    elif value is None:
-        return 'null'
-    else:
-        return value
-
 def generate_diff(file1_path, file2_path, format_name='stylish'):
     """Generate diff between two files."""
     data1 = parse_file(file1_path)
     data2 = parse_file(file2_path)
-    
+
     diff = build_diff(data1, data2)
-    
+
     if format_name == 'stylish':
         return format_stylish(diff)
     else:
@@ -86,9 +81,9 @@ def main():
     parser.add_argument('-f', '--format',
                         default='stylish',
                         help='set format of output')
-    
+
     args = parser.parse_args()
-    
+
     diff = generate_diff(args.first_file, args.second_file, args.format)
     print(diff)
 
