@@ -11,17 +11,12 @@ jobs:
     name: SonarCloud
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       
-      - name: Hexlet project check
-        uses: hexlet/project-action@7d7719e792a64857574fc34c364701c3d3bb8a08
-        with:
-          hexlet-id: ${{ secrets.HEXLET_ID }}
-      
       - name: Set up Python
-        uses: actions/setup-python@7f4fc3e22c37d6ff65e88745f38bd3157c663f7c
+        uses: actions/setup-python@v4
         with:
           python-version: '3.12'
       
@@ -36,7 +31,7 @@ jobs:
           uv run pytest --cov=src --cov-report=xml --cov-report=term
       
       - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@ba3875ecf642b2129de2b589510c81a8b53dbf4e
+        uses: SonarSource/sonarcloud-github-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
