@@ -15,6 +15,11 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Check project structure
+        run: |
+          ls -la
+          find . -name "*.py" -type f | sort
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -42,4 +47,3 @@ jobs:
             -Dsonar.organization=targitay008
             -Dsonar.python.coverage.reportPaths=coverage.xml
             -Dsonar.sources=src
-            -Dsonar.tests=tests
