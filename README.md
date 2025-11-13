@@ -1,5 +1,10 @@
 ### Hexlet tests and linter status:
-[![Actions Status](https://github.com/TaRgITay008/python-project-50/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/TaRgITay008/python-project-50/actions)
+
+# Difference Generator (gendiff)
+
+[![Actions Status](https://github.com/TaRgITay008/python-project-50/workflows/hexlet-check/badge.svg)](https://github.com/TaRgITay008/python-project-50/actions)
+[![Maintainability](https://api.codeclimate.com/v1/badges/.../maintainability)](https://codeclimate.com/github/TaRgITay008/python-project-50/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/.../coverage)](https://codeclimate.com/github/TaRgITay008/python-project-50/test_coverage)
 
 # Gendiff - Генератор различий JSON и YAML
 

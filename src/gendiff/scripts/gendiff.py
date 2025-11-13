@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import argparse
-from gendiff.parsers.parser import parse_file
+from gendiff.scripts.parsers.parser import parse_file
 from gendiff.diff_builder import build_diff
 from gendiff.formatters import format_stylish, format_plain, format_json
 
