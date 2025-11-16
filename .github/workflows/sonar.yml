@@ -3,15 +3,13 @@ name: SonarCloud
 on:
   push:
     branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
   sonarcloud:
     name: SonarCloud
     runs-on: ubuntu-latest
-    
-    # Добавляем условие чтобы не блокировать основной workflow
-    continue-on-error: true
-    
     steps:
       - uses: actions/checkout@v4
         with:
@@ -25,15 +23,21 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install uv
-          uv sync
+          pip install pytest pytest-cov
+          pip install -e .
 
-      - name: Run tests
+      - name: Run tests with coverage
         run: |
-          python -m pytest --cov=src --cov-report=term
+          pytest --cov=gendiff --cov-report=xml --cov-report=term
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.projectKey=TaRgITay008_python-project-50
+            -Dsonar.organization=targitay008
+            -Dsonar.python.coverage.reportPaths=coverage.xml
+            -Dsonar.sources=gendiff

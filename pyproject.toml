@@ -26,7 +26,7 @@ dev = [
     "pytest-cov>=5.0.0",
 ]
 [tool.coverage.run]
-source = ["src"]
+source = ["gendiff"]
 omit = [
     "*/tests/*",
     "*/test_*"

@@ -1,10 +1,8 @@
 ### Hexlet tests and linter status:
 
-# Difference Generator (gendiff)
-
 [![Actions Status](https://github.com/TaRgITay008/python-project-50/workflows/hexlet-check/badge.svg)](https://github.com/TaRgITay008/python-project-50/actions)
-[![Maintainability](https://api.codeclimate.com/v1/badges/.../maintainability)](https://codeclimate.com/github/TaRgITay008/python-project-50/maintainability)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/.../coverage)](https://codeclimate.com/github/TaRgITay008/python-project-50/test_coverage)
+[![Maintainability](https://api.codeclimate.com/v1/badges/ВАШ_CODE_CLIMATE_ID/maintainability)](https://codeclimate.com/github/TaRgITay008/python-project-50/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/ВАШ_CODE_CLIMATE_ID/coverage)](https://codeclimate.com/github/TaRgITay008/python-project-50/test_coverage)
 
 # Gendiff - Генератор различий JSON и YAML
 
@@ -20,6 +18,7 @@ uv sync
 
 # Или установка пакета глобально (после сборки)
 uv tool install .
+
 ### JSON формат
 
 ```bash

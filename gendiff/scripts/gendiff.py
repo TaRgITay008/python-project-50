@@ -4,7 +4,6 @@ from gendiff.scripts.parsers.parser import parse_file
 from gendiff.diff_builder import build_diff
 from gendiff.formatters import format_stylish, format_plain, format_json
 
-
 def get_formatter(format_name):
     """Get formatter function by name."""
     formatters = {
