@@ -28,7 +28,7 @@ jobs:
 
       - name: Run tests with coverage
         run: |
-          pytest --cov=gendiff --cov-report=xml --cov-report=term
+          pytest tests/ --cov=gendiff --cov-report=xml --cov-report=term
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
