@@ -4,7 +4,6 @@
 import pytest
 from gendiff import generate_diff
 
-
 def test_generate_diff_function_exists():
     """Test that generate_diff function exists."""
     assert callable(generate_diff)
