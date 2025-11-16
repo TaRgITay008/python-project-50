@@ -1,30 +1,38 @@
 [project]
-name = "hexlet-code" 
-version = "0.1.0"
-description = "Compares two configuration files and shows a difference"
-authors = [
-    { name = "Targitay", email = "cibrenok@bk.ru" },
-]
-readme = "README.md"
-requires-python = ">=3.8"
+name = "gendiff"
+version = "1.0.0"
+description = "Generate differences between two files"
 dependencies = [
-    "pyyaml>=6.0.3",
+    "pyyaml>=6.0",
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+    "ruff>=0.1.0",
 ]
-
-[project.scripts]
-gendiff = "gendiff.scripts.gendiff:main"
 
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
 
-[tool.hatch.build.targets.wheel]
-packages = ["src/gendiff"]
+[tool.setuptools]
+packages = ["gendiff", "gendiff.scripts", "gendiff.formatters"]
 
-[dependency-groups]
-dev = [
-    "pytest-cov>=5.0.0",
+[tool.setuptools.package-dir]
+"gendiff" = "gendiff"
+"gendiff.scripts" = "gendiff/scripts" 
+"gendiff.formatters" = "gendiff/formatters"
+
+[tool.ruff]
+line-length = 80
+target-version = "py312"
+
+[tool.ruff.lint]
+select = [
+    "E", "W", "F", "I", "B", "C4", "UP",
 ]
+
+[tool.ruff.lint.isort]
+known-first-party = ["gendiff"]
+
 [tool.coverage.run]
 source = ["gendiff"]
 omit = [
