@@ -67,3 +67,4 @@ uv run gendiff -f json file1.json file2.json
 
 ```bash
 uv run gendiff file1.json file2.json
+
