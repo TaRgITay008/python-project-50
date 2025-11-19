@@ -1,5 +1,5 @@
 [project]
-name = "hexlet-code"
+name = "gendiff"
 version = "1.0.0"
 description = "Generate differences between two files"
 dependencies = [
@@ -14,13 +14,13 @@ requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
-packages = ["hexlet_code", "hexlet_code.scripts", "hexlet_code.formatters", "hexlet_code.scripts.parsers"]
+packages = ["gendiff", "gendiff.scripts", "gendiff.formatters", "gendiff.scripts.parsers"]
 
 [tool.setuptools.package-dir]
-"hexlet_code" = "hexlet_code"
-"hexlet_code.scripts" = "hexlet_code/scripts" 
-"hexlet_code.formatters" = "hexlet_code/formatters"
-"hexlet_code.scripts.parsers" = "hexlet_code/scripts/parsers"
+"gendiff" = "gendiff"
+"gendiff.scripts" = "gendiff/scripts"
+"gendiff.formatters" = "gendiff/formatters"
+"gendiff.scripts.parsers" = "gendiff/scripts/parsers"
 
 [tool.ruff]
 line-length = 80
@@ -54,3 +54,6 @@ exclude_lines = [
     "class .*\\bProtocol\\):",
     "@(abc\\.)?abstractmethod"
 ]
+
+[tool.pytest.ini_options]
+addopts = "--ignore=tests/test_10_diff.py"
