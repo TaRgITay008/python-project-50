@@ -1,5 +1,5 @@
 [project]
-name = "gendiff"
+name = "hexlet-code"
 version = "1.0.0"
 description = "Generate differences between two files"
 dependencies = [
@@ -14,13 +14,13 @@ requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
-packages = ["gendiff", "gendiff.scripts", "gendiff.formatters", "gendiff.scripts.parsers"]
+packages = ["hexlet_code", "hexlet_code.scripts", "hexlet_code.formatters", "hexlet_code.scripts.parsers"]
 
 [tool.setuptools.package-dir]
-"gendiff" = "gendiff"
-"gendiff.scripts" = "gendiff/scripts"
-"gendiff.formatters" = "gendiff/formatters"
-"gendiff.scripts.parsers" = "gendiff/scripts/parsers"
+"hexlet_code" = "hexlet_code"
+"hexlet_code.scripts" = "hexlet_code/scripts"
+"hexlet_code.formatters" = "hexlet_code/formatters"
+"hexlet_code.scripts.parsers" = "hexlet_code/scripts/parsers"
 
 [tool.ruff]
 line-length = 80
