@@ -25,6 +25,9 @@ def format_stylish(diff, depth=0):
     indent = '  ' * depth
     lines = []
     
+    # Check if we have nested structures at top level
+    has_nested_top_level = any(node['type'] == 'nested' for node in diff) if depth == 0 else False
+    
     for i, node in enumerate(diff):
         key = node['key']
         type_ = node['type']
@@ -47,12 +50,11 @@ def format_stylish(diff, depth=0):
             lines.append(f"{indent}  - {key}: {old_value}")
             lines.append(f"{indent}  + {key}: {new_value}")
         
-        # Add empty line between top-level blocks except the last one
-        if depth == 0 and i < len(diff) - 1:
+        # Add empty line between top-level NESTED blocks only
+        if depth == 0 and has_nested_top_level and i < len(diff) - 1:
             lines.append('')
     
     result = '\n'.join(lines)
     if depth == 0:
         return f"{{\n{result}\n}}\n"
     return f"{{\n{result}\n{indent}}}"
-
