@@ -1,0 +1,48 @@
+[project]
+name = "hexlet-code"
+version = "1.0.0"
+description = "Difference Calculator"
+authors = [
+    {name = "TaRgITay008", email = "your-email@example.com"},
+]
+dependencies = [
+    "pyyaml>=6.0",
+]
+requires-python = ">=3.10"
+
+[project.scripts]
+gendiff = "hexlet_code.scripts.gendiff:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+    "ruff<=0.9.7",  # Hexlet требует старую версию
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "B",  # flake8-bugbear
+]
+ignore = ["E501"]
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "-ra --color=yes --cov=hexlet_code --cov-report=term-missing"
+testpaths = ["tests"]
+
+[tool.coverage.run]
+source = ["hexlet_code"]
+omit = ["*/tests/*"]
