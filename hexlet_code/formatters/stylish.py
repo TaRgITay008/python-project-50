@@ -30,4 +30,4 @@ def format_stylish(diff, depth=0):
             lines.append(f"{indent}  + {key}: {format_value(node['new_value'])}")
 
     result = '\n'.join(lines)
-    return f"{{\n{result}\n{indent}}}"
+    return f"{{\n{result}\n{indent}}}\n"
