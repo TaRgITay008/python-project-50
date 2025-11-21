@@ -1,70 +1,76 @@
-### Hexlet tests and linter status:
+# Вычислитель отличий (Gendiff)
 
-[![Actions Status](https://github.com/TaRgITay008/python-project-50/workflows/hexlet-check/badge.svg)](https://github.com/TaRgITay008/python-project-50/actions)
-[![Maintainability](https://api.codeclimate.com/v1/badges/ВАШ_CODE_CLIMATE_ID/maintainability)](https://codeclimate.com/github/TaRgITay008/python-project-50/maintainability)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/ВАШ_CODE_CLIMATE_ID/coverage)](https://codeclimate.com/github/TaRgITay008/python-project-50/test_coverage)
+Python-библиотека и CLI-утилита для сравнения конфигурационных файлов. Поддерживает форматы JSON и YAML с различными форматами вывода.
 
-# Gendiff - Генератор различий JSON и YAML
+## 📦 Установка
 
-Командная утилита и Python библиотека для поиска различий между двумя JSON или YAML файлами конфигураций.
+### Требования
+- Python 3.10 или выше
+- Менеджер пакетов UV
 
-## Установка
-
-```bash
-# Установка в режиме разработки
+### Установка из исходного кода
+\`\`\`bash
 git clone https://github.com/TaRgITay008/python-project-50.git
 cd python-project-50
 uv sync
+\`\`\`
 
-# Или установка пакета глобально (после сборки)
-uv tool install .
+## 🚀 Использование
 
-### JSON формат
+### Как CLI-утилита
+\`\`\`bash
+# Базовое использование со stylish форматом (по умолчанию)
+gendiff file1.json file2.json
 
-```bash
-uv run gendiff -f json file1.json file2.json
-```
+# С YAML файлами
+gendiff file1.yml file2.yml
 
-Вывод (пример структуры):
-```json
-{
-  "common": {
-    "type": "nested",
-    "children": {
-      "follow": {
-        "type": "added", 
-        "value": false
-      },
-      "setting1": {
-        "type": "unchanged",
-        "value": "Value 1"
-      },
-      "setting2": {
-        "type": "removed", 
-        "value": 200
-      },
-      "setting3": {
-        "type": "changed",
-        "old_value": true,
-        "new_value": null
-      }
-    }
-  }
-}
-```
+# Разные форматы вывода
+gendiff file1.json file2.json --format plain
+gendiff file1.json file2.json --format json
+gendiff file1.json file2.json -f stylish
+\`\`\`
 
-## Демонстрация
+### Как Python-библиотека
+\`\`\`python
+from hexlet_code import generate_diff
 
-### Asciinema запись
+# Сравнение двух JSON файлов
+result = generate_diff('file1.json', 'file2.json')
+print(result)
 
-[![asciicast](https://asciinema.org/a/Pe6QypnLEmFWssNAjCOJN1iii.svg)](https://asciinema.org/a/Pe6QypnLEmFWssNAjCOJN1iii)
+# Сравнение с указанием формата
+result = generate_diff('file1.yml', 'file2.yml', 'plain')
+result = generate_diff('file1.json', 'file2.json', 'json')
+\`\`\`
 
-*Демонстрация показывает работу всех трех форматов вывода: stylish, plain и json*
+## 📊 Форматы вывода
 
-### Примеры вывода
+### Stylish (по умолчанию)
+Древовидный формат, показывающий добавленные, удаленные и измененные значения с маркерами + и -.
 
-#### Stylish формат (по умолчанию)
+### Plain
+Текстовое описание изменений на простом языке.
 
-```bash
-uv run gendiff file1.json file2.json
+### JSON
+JSON-представление дерева различий для машинной обработки.
 
+## 🛠 Разработка
+
+### Установка окружения разработки
+\`\`\`bash
+make install
+\`\`\`
+
+### Запуск тестов
+\`\`\`bash
+make test
+make test-coverage
+\`\`\`
+
+### Качество кода
+\`\`\`bash
+make lint
+make format
+make check
+\`\`\`

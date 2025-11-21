@@ -1,46 +1,35 @@
-def format_value(value):
-    if isinstance(value, (dict, list)):
+def to_string(value):
+    """Convert value to string representation for plain format."""
+    if isinstance(value, dict):
         return '[complex value]'
-    if isinstance(value, bool):
-        return str(value).lower()
+    if isinstance(value, str):
+        return f"'{value}'"
     if value is None:
         return 'null'
-    if isinstance(value, (int, float)):
-        return str(value)
-    return f"'{value}'"
+    if isinstance(value, bool):
+        return str(value).lower()
+    return str(value)
 
 
-def build_plain(diff, path=''):
+def format_plain(diff, path=''):
+    """Format diff as plain text."""
     lines = []
-    
-    # Сортируем ключи для консистентности
-    for key in sorted(diff.keys()):
-        node = diff[key]
+
+    for node in diff:
+        current_path = f"{path}.{node['key']}" if path else node['key']
         node_type = node['type']
-        current_path = f"{path}.{key}" if path else key
-        
+
         if node_type == 'nested':
-            # Рекурсивно обрабатываем вложенные узлы
-            lines.extend(build_plain(node['children'], current_path))
+            lines.append(format_plain(node['children'], current_path))
         elif node_type == 'added':
-            value = format_value(node['value'])
-            lines.append(
-                f"Property '{current_path}' was added with value: {value}"
-            )
+            lines.append(f"Property '{current_path}' was added with value: "
+                        f"{to_string(node['value'])}")
         elif node_type == 'removed':
             lines.append(f"Property '{current_path}' was removed")
         elif node_type == 'changed':
-            old_value = format_value(node['old_value'])
-            new_value = format_value(node['new_value'])
-            lines.append(
-                f"Property '{current_path}' was updated. From "
-                f"{old_value} to {new_value}"
-            )
-        # unchanged nodes are skipped in plain format
-    
-    return lines
+            lines.append(f"Property '{current_path}' was updated. "
+                        f"From {to_string(node['old_value'])} to "
+                        f"{to_string(node['new_value'])}")
 
-
-def format_plain(diff):
-    result = build_plain(diff)
-    return '\n'.join(result)
+    result = '\n'.join(line for line in lines if line)
+    return result + '\n' if result else result
