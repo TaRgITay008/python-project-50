@@ -13,9 +13,12 @@ requires-python = ">=3.10"
 [project.scripts]
 gendiff = "hexlet_code.scripts.gendiff:main"
 
+[tool.setuptools.packages.find]
+include = ["hexlet_code*", "gendiff*"]
+
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
 
 [project.optional-dependencies]
 dev = [
