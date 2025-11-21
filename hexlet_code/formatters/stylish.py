@@ -25,7 +25,7 @@ def format_stylish(diff, depth=0):
     indent = '  ' * depth
     lines = []
     
-    for node in diff:
+    for i, node in enumerate(diff):
         key = node['key']
         type_ = node['type']
         
@@ -46,8 +46,13 @@ def format_stylish(diff, depth=0):
             new_value = stringify(node['new_value'], depth + 1)
             lines.append(f"{indent}  - {key}: {old_value}")
             lines.append(f"{indent}  + {key}: {new_value}")
+        
+        # Add empty line between top-level blocks except the last one
+        if depth == 0 and i < len(diff) - 1:
+            lines.append('')
     
     result = '\n'.join(lines)
     if depth == 0:
         return f"{{\n{result}\n}}\n"
     return f"{{\n{result}\n{indent}}}"
+
