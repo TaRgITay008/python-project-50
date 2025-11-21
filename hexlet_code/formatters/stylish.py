@@ -17,7 +17,8 @@ def format_stylish(diff, depth=0):
         node_type = node['type']
 
         if node_type == 'nested':
-            lines.append(f"{indent}  {key}: {format_stylish(node['children'], depth + 2)}")
+            formatted_children = format_stylish(node['children'], depth + 2)
+            lines.append(f"{indent}  {key}: {formatted_children}")
         elif node_type == 'added':
             lines.append(f"{indent}  + {key}: {format_value(node['value'])}")
         elif node_type == 'removed':
@@ -29,4 +30,4 @@ def format_stylish(diff, depth=0):
             lines.append(f"{indent}  + {key}: {format_value(node['new_value'])}")
 
     result = '\n'.join(lines)
-    return f"{{\n{result}\n{indent}}}\n"
+    return f"{{\n{result}\n{indent}}}"
