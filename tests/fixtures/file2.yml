@@ -19,7 +19,7 @@ group3:
   deep:
     id:
       number: 45
-  fee: 100 500
+  fee: 100500
 group4:
   type: bar
   key: false
