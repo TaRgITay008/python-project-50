@@ -18,33 +18,31 @@ def format_value(value, depth):
 def format_stylish(diff, depth=0):
     indent = "    " * depth
     lines = []
-    
+
     for item in diff:
         key = item["name"]
         action = item["action"]
-        
+
         if action == "unchanged":
             value = format_value(item["value"], depth + 1)
             lines.append(f"{indent}    {key}: {value}")
         elif action == "added":
             value = format_value(item["new_value"], depth + 1)
             lines.append(f"{indent}  + {key}: {value}")
-        elif action == "deleted":
+        elif action == "removed":
             value = format_value(item["old_value"], depth + 1)
             lines.append(f"{indent}  - {key}: {value}")
-        elif action == "modified":
+        elif action == "changed":
             old_value = format_value(item["old_value"], depth + 1)
             new_value = format_value(item["new_value"], depth + 1)
             lines.append(f"{indent}  - {key}: {old_value}")
             lines.append(f"{indent}  + {key}: {new_value}")
         elif action == "nested":
-            children = format_stylish(item["children"], depth + 1)
-            lines.append(f"{indent}    {key}: {children}")
-    
+            nested_diff = item["children"]
+            formatted_nested = format_stylish(nested_diff, depth + 1)
+            lines.append(f"{indent}    {key}: {formatted_nested}")
+
     result = "\n".join(lines)
-    end_indent = "    " * depth
-    return f"{{\n{result}\n{end_indent}}}"
-
-
-def format_diff_stylish(diff):
-    return format_stylish(diff)
+    if depth == 0:
+        return f"{{\n{result}\n}}"
+    return f"{{\n{result}\n{indent}}}"
