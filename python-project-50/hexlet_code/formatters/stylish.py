@@ -1,53 +1,50 @@
-SEPARATOR = " "
-ADD = '+ '
-DEL = '- '
-NONE = '  '
-
-
-def format_value(value, spaces_count=2):
+def format_value(value, depth):
     if value is None:
         return "null"
     if isinstance(value, bool):
         return str(value).lower()
     if isinstance(value, dict):
-        indent = SEPARATOR * (spaces_count + 4)
-        result_lines = []
-        for key, inner_value in value.items():
-            formatted_value = format_value(inner_value, spaces_count + 4)
-            result_lines.append(f"{indent}{NONE}{key}: {formatted_value}")
-        formatted_string = '\n'.join(result_lines)
-        end_indent = SEPARATOR * (spaces_count + 2)
-        return f"{{\n{formatted_string}\n{end_indent}}}"
-    return f"{value}"
+        indent = "    " * (depth + 1)
+        lines = []
+        for key, val in value.items():
+            formatted_value = format_value(val, depth + 1)
+            lines.append(f"{indent}{key}: {formatted_value}")
+        formatted = "\n".join(lines)
+        end_indent = "    " * depth
+        return f"{{\n{formatted}\n{end_indent}}}"
+    return str(value)
 
 
-def make_stylish_diff(diff, spaces_count=2):
-    indent = SEPARATOR * spaces_count
+def format_stylish(diff, depth=0):
+    indent = "    " * depth
     lines = []
+    
     for item in diff:
-        key = item['name']
-        action = item['action']
-        value = format_value(item.get('value'), spaces_count)
-        old_value = format_value(item.get('old_value'), spaces_count)
-        new_value = format_value(item.get('new_value'), spaces_count)
-
+        key = item["name"]
+        action = item["action"]
+        
         if action == "unchanged":
-            lines.append(f"{indent}{NONE}{key}: {value}")
-        elif action == "modified":
-            lines.append(f"{indent}{DEL}{key}: {old_value}")
-            lines.append(f"{indent}{ADD}{key}: {new_value}")
-        elif action == "deleted":
-            lines.append(f"{indent}{DEL}{key}: {old_value}")
+            value = format_value(item["value"], depth + 1)
+            lines.append(f"{indent}    {key}: {value}")
         elif action == "added":
-            lines.append(f"{indent}{ADD}{key}: {new_value}")
-        elif action == 'nested':
-            children = make_stylish_diff(item.get("children"), spaces_count + 4)
-            lines.append(f"{indent}{NONE}{key}: {children}")
-    formatted_string = '\n'.join(lines)
-    end_indent = SEPARATOR * (spaces_count - 2)
+            value = format_value(item["new_value"], depth + 1)
+            lines.append(f"{indent}  + {key}: {value}")
+        elif action == "deleted":
+            value = format_value(item["old_value"], depth + 1)
+            lines.append(f"{indent}  - {key}: {value}")
+        elif action == "modified":
+            old_value = format_value(item["old_value"], depth + 1)
+            new_value = format_value(item["new_value"], depth + 1)
+            lines.append(f"{indent}  - {key}: {old_value}")
+            lines.append(f"{indent}  + {key}: {new_value}")
+        elif action == "nested":
+            children = format_stylish(item["children"], depth + 1)
+            lines.append(f"{indent}    {key}: {children}")
+    
+    result = "\n".join(lines)
+    end_indent = "    " * depth
+    return f"{{\n{result}\n{end_indent}}}"
 
-    return f"{{\n{formatted_string}\n{end_indent}}}"
 
-
-def format_diff_stylish(data):
-    return make_stylish_diff(data)
+def format_diff_stylish(diff):
+    return format_stylish(diff)
