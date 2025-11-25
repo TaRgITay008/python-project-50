@@ -29,10 +29,10 @@ def format_stylish(diff, depth=0):
         elif action == "added":
             value = format_value(item["new_value"], depth + 1)
             lines.append(f"{indent}  + {key}: {value}")
-        elif action == "removed":
+        elif action == "removed" or action == "deleted":  # Поддержка обоих названий
             value = format_value(item["old_value"], depth + 1)
             lines.append(f"{indent}  - {key}: {value}")
-        elif action == "changed":
+        elif action == "changed" or action == "modified":  # Поддержка обоих названий
             old_value = format_value(item["old_value"], depth + 1)
             new_value = format_value(item["new_value"], depth + 1)
             lines.append(f"{indent}  - {key}: {old_value}")
@@ -46,3 +46,7 @@ def format_stylish(diff, depth=0):
     if depth == 0:
         return f"{{\n{result}\n}}"
     return f"{{\n{result}\n{indent}}}"
+
+
+# Алиас для обратной совместимости с существующим кодом
+format_diff_stylish = format_stylish
