@@ -12,11 +12,21 @@ def format_stylish(diff, depth=0):
             lines.extend(format_stylish(node['children'], depth + 2))
             lines.append(f"{indent}  }}")
         elif node_type == 'added':
-            value_str = format_value(node['value'], depth + 2)
-            lines.append(f"{indent}+ {key}: {value_str}")
+            if isinstance(node['value'], dict):
+                lines.append(f"{indent}+ {key}: {{")
+                lines.extend(format_object(node['value'], depth + 2))
+                lines.append(f"{indent}  }}")
+            else:
+                value_str = format_value(node['value'], depth + 2)
+                lines.append(f"{indent}+ {key}: {value_str}")
         elif node_type == 'removed':
-            value_str = format_value(node['value'], depth + 2)
-            lines.append(f"{indent}- {key}: {value_str}")
+            if isinstance(node['value'], dict):
+                lines.append(f"{indent}- {key}: {{")
+                lines.extend(format_object(node['value'], depth + 2))
+                lines.append(f"{indent}  }}")
+            else:
+                value_str = format_value(node['value'], depth + 2)
+                lines.append(f"{indent}- {key}: {value_str}")
         elif node_type == 'changed':
             old_value = format_value(node['old_value'], depth + 2)
             new_value = format_value(node['new_value'], depth + 2)
@@ -24,6 +34,24 @@ def format_stylish(diff, depth=0):
             lines.append(f"{indent}+ {key}: {new_value}")
         elif node_type == 'unchanged':
             value_str = format_value(node['value'], depth + 2)
+            lines.append(f"{indent}  {key}: {value_str}")
+    
+    return lines
+
+def format_object(obj, depth=0):
+    """Format object for removed/added cases with special indentation"""
+    lines = []
+    # Уменьшаем глубину на 1 уровень для правильных отступов
+    indent = "  " * (depth - 1)
+    
+    for key in sorted(obj.keys()):
+        value = obj[key]
+        if isinstance(value, dict):
+            lines.append(f"{indent}  {key}: {{")
+            lines.extend(format_object(value, depth + 1))  # +1 вместо +2
+            lines.append(f"{indent}  }}")
+        else:
+            value_str = format_value(value, depth)
             lines.append(f"{indent}  {key}: {value_str}")
     
     return lines
@@ -41,6 +69,8 @@ def format_value(value, depth=0):
         return "null"
     elif isinstance(value, bool):
         return str(value).lower()
+    elif isinstance(value, str):
+        return value
     else:
         return str(value)
 
@@ -54,4 +84,4 @@ def render_stylish(diff):
     for line in formatted:
         indented_lines.append("  " + line)
     
-    return "{\n" + "\n".join(indented_lines) + "\n}\n"  # Добавили \n в конце
+    return "{\n" + "\n".join(indented_lines) + "\n}\n"
