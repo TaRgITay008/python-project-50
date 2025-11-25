@@ -1,60 +1,57 @@
-def stringify(value, depth):
-    """Convert value to string with proper formatting."""
-    if isinstance(value, bool):
-        return str(value).lower()
-    if value is None:
-        return 'null'
-    if isinstance(value, dict):
-        return format_nested(value, depth + 1)
-    return str(value)
-
-
-def format_nested(data, depth):
-    """Format nested dictionary."""
-    indent = '  ' * depth
-    lines = []
-    for key, value in sorted(data.items()):
-        formatted_value = stringify(value, depth + 1)
-        lines.append(f"{indent}  {key}: {formatted_value}")
-    result = '\n'.join(lines)
-    return f"{{\n{result}\n{indent}}}"
-
-
 def format_stylish(diff, depth=0):
-    """Format diff tree to stylish string."""
-    indent = '  ' * depth
+    """Format diff in stylish format with exact indentation"""
     lines = []
+    indent = "  " * depth
     
-    # Check if we have nested structures at top level
-    has_nested_top_level = any(node['type'] == 'nested' for node in diff) if depth == 0 else False
-    
-    for i, node in enumerate(diff):
-        key = node['key']
-        type_ = node['type']
+    for key in sorted(diff.keys()):
+        node = diff[key]
+        node_type = node['type']
         
-        if type_ == 'nested':
-            children = format_stylish(node['children'], depth + 2)
-            lines.append(f"{indent}  {key}: {children}")
-        elif type_ == 'added':
-            value = stringify(node['value'], depth + 1)
-            lines.append(f"{indent}  + {key}: {value}")
-        elif type_ == 'removed':
-            value = stringify(node['value'], depth + 1)
-            lines.append(f"{indent}  - {key}: {value}")
-        elif type_ == 'unchanged':
-            value = stringify(node['value'], depth + 1)
-            lines.append(f"{indent}    {key}: {value}")
-        elif type_ == 'changed':
-            old_value = stringify(node['old_value'], depth + 1)
-            new_value = stringify(node['new_value'], depth + 1)
-            lines.append(f"{indent}  - {key}: {old_value}")
-            lines.append(f"{indent}  + {key}: {new_value}")
-        
-        # Add empty line between top-level NESTED blocks only
-        if depth == 0 and has_nested_top_level and i < len(diff) - 1:
-            lines.append('')
+        if node_type == 'nested':
+            lines.append(f"{indent}  {key}: {{")
+            lines.extend(format_stylish(node['children'], depth + 2))
+            lines.append(f"{indent}  }}")
+        elif node_type == 'added':
+            value_str = format_value(node['value'], depth + 2)
+            lines.append(f"{indent}+ {key}: {value_str}")
+        elif node_type == 'removed':
+            value_str = format_value(node['value'], depth + 2)
+            lines.append(f"{indent}- {key}: {value_str}")
+        elif node_type == 'changed':
+            old_value = format_value(node['old_value'], depth + 2)
+            new_value = format_value(node['new_value'], depth + 2)
+            lines.append(f"{indent}- {key}: {old_value}")
+            lines.append(f"{indent}+ {key}: {new_value}")
+        elif node_type == 'unchanged':
+            value_str = format_value(node['value'], depth + 2)
+            lines.append(f"{indent}  {key}: {value_str}")
     
-    result = '\n'.join(lines)
-    if depth == 0:
-        return f"{{\n{result}\n}}\n"
-    return f"{{\n{result}\n{indent}}}"
+    return lines
+
+def format_value(value, depth=0):
+    """Format value with proper indentation"""
+    if isinstance(value, dict):
+        lines = ["{"]
+        for k, v in sorted(value.items()):
+            value_str = format_value(v, depth + 2)
+            lines.append(f"{'  ' * (depth + 1)}{k}: {value_str}")
+        lines.append(f"{'  ' * depth}}}")
+        return "\n".join(lines)
+    elif value is None:
+        return "null"
+    elif isinstance(value, bool):
+        return str(value).lower()
+    else:
+        return str(value)
+
+def render_stylish(diff):
+    """Render diff in stylish format"""
+    if not diff:
+        return "{}"
+    
+    formatted = format_stylish(diff)
+    indented_lines = []
+    for line in formatted:
+        indented_lines.append("  " + line)
+    
+    return "{\n" + "\n".join(indented_lines) + "\n}\n"  # Добавили \n в конце
