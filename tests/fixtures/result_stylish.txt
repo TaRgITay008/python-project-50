@@ -41,7 +41,7 @@
               number: 45
             }
         }
-      fee: 100 500
+      fee: 100500
     }
 + group4: {
       default: 

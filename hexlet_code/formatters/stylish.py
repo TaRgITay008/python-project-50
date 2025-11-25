@@ -35,7 +35,6 @@ def format_value(value, depth=0):
         for k, v in sorted(value.items()):
             value_str = format_value(v, depth + 2)
             lines.append(f"{'  ' * (depth + 1)}{k}: {value_str}")
-        # ВАЖНО: правильные отступы для закрывающей скобки
         lines.append(f"{'  ' * depth}}}")
         return "\n".join(lines)
     elif value is None:
@@ -53,4 +52,5 @@ def render_stylish(diff):
         return "{}"
     
     formatted = format_stylish(diff)
-    return "{\n" + "\n".join(formatted) + "\n}"
+    # ВАЖНО: добавляем перенос строки в конце!
+    return "{\n" + "\n".join(formatted) + "\n}\n"
