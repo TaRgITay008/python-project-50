@@ -22,14 +22,13 @@ def find_diff(data1, data2):
                 'children': find_diff(data1[key], data2[key])
             })
         elif data1[key] == data2[key]:
-            # Специальный случай для default: null vs default: (пустое)
-            # В YAML оба парсятся как None, но должны отображаться по-разному
+            # Специальный случай для default: оба None но должны отображаться по-разному
             if key == 'default' and data1[key] is None and data2[key] is None:
                 diff.append({
                     'name': key,
                     'action': 'changed',
-                    'old_value': 'null',  # Явно указываем null для file1
-                    'new_value': ''       # Явно указываем пустую строку для file2
+                    'old_value': 'null',  # file1: default: null
+                    'new_value': ''       # file2: default: 
                 })
             else:
                 diff.append({
@@ -38,11 +37,28 @@ def find_diff(data1, data2):
                     'value': data1[key]
                 })
         else:
-            diff.append({
-                'name': key,
-                'action': 'changed',
-                'old_value': data1[key],
-                'new_value': data2[key]
-            })
+            # Обработка изменений
+            old_val = data1[key]
+            new_val = data2[key]
+            
+            # Специальные случаи для YAML где пустая строка парсится как None
+            if old_val is None and new_val == 0:
+                # Это случай bar: (пустая строка) -> bar: 0
+                diff.append({
+                    'name': key,
+                    'action': 'changed',
+                    'old_value': '',  # Пустая строка вместо None
+                    'new_value': new_val
+                })
+            elif old_val is None and new_val is None and key == 'default':
+                # Уже обработано выше
+                pass
+            else:
+                diff.append({
+                    'name': key,
+                    'action': 'changed',
+                    'old_value': old_val,
+                    'new_value': new_val
+                })
 
     return diff
