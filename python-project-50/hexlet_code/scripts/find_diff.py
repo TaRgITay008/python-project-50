@@ -1,18 +1,18 @@
 def find_diff(data1, data2):
     diff = []
     all_keys = sorted(set(data1.keys()) | set(data2.keys()))
-    
+
     for key in all_keys:
         if key not in data2:
             diff.append({
                 'name': key,
-                'action': 'deleted',
+                'action': 'removed',  # ИЗМЕНИТЬ 'deleted' на 'removed'
                 'old_value': data1[key]
             })
         elif key not in data1:
             diff.append({
                 'name': key,
-                'action': 'added', 
+                'action': 'added',
                 'new_value': data2[key]
             })
         elif isinstance(data1[key], dict) and isinstance(data2[key], dict):
@@ -30,10 +30,9 @@ def find_diff(data1, data2):
         else:
             diff.append({
                 'name': key,
-                'action': 'modified',
+                'action': 'changed',
                 'old_value': data1[key],
                 'new_value': data2[key]
             })
-    
-    return diff
 
+    return diff
