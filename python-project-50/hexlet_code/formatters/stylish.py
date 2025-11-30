@@ -36,8 +36,6 @@ def format_stylish(diff, depth=0):
 def format_value(value, depth):
     if value is None:
         return 'null'
-    elif value == '':
-        return ''
     elif isinstance(value, bool):
         return str(value).lower()
     elif isinstance(value, (int, float)):
@@ -52,7 +50,7 @@ def format_dict(dictionary, depth):
     lines = []
     indent = "    " * depth
     
-    for key, value in dictionary.items():
+    for key, value in sorted(dictionary.items()):
         formatted_value = format_value(value, depth + 1)
         lines.append(f"{indent}    {key}: {formatted_value}")
     

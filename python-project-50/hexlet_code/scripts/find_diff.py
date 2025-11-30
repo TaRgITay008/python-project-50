@@ -22,38 +22,17 @@ def find_diff(data1, data2):
                 'children': find_diff(data1[key], data2[key])
             })
         elif data1[key] == data2[key]:
-            # Special case for default: both None but should display differently
-            if key == 'default' and data1[key] is None and data2[key] is None:
-                diff.append({
-                    'name': key,
-                    'action': 'changed',
-                    'old_value': 'null',
-                    'new_value': ''
-                })
-            else:
-                diff.append({
-                    'name': key,
-                    'action': 'unchanged',
-                    'value': data1[key]
-                })
+            diff.append({
+                'name': key,
+                'action': 'unchanged',
+                'value': data1[key]
+            })
         else:
-            old_val = data1[key]
-            new_val = data2[key]
-            
-            # Special case for bar: None -> 0
-            if key == 'bar' and old_val is None and new_val == 0:
-                diff.append({
-                    'name': key,
-                    'action': 'changed',
-                    'old_value': '',
-                    'new_value': new_val
-                })
-            else:
-                diff.append({
-                    'name': key,
-                    'action': 'changed',
-                    'old_value': old_val,
-                    'new_value': new_val
-                })
+            diff.append({
+                'name': key,
+                'action': 'changed',
+                'old_value': data1[key],
+                'new_value': data2[key]
+            })
 
     return diff
