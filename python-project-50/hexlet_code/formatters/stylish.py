@@ -4,13 +4,13 @@ def format_value(value, depth):
     if isinstance(value, bool):
         return str(value).lower()
     if isinstance(value, dict):
-        indent = "    " * (depth + 1)
+        indent = "  " * (depth + 1)  # 2 пробела на уровень
         lines = []
         for key, val in value.items():
             formatted_value = format_value(val, depth + 1)
             lines.append(f"{indent}{key}: {formatted_value}")
         formatted = "\n".join(lines)
-        end_indent = "    " * depth
+        end_indent = "  " * depth
         return f"{{\n{formatted}\n{end_indent}}}"
     if value == "":
         return ""
@@ -18,38 +18,33 @@ def format_value(value, depth):
 
 
 def format_stylish(diff, depth=0):
-    # Для depth=0: base_indent = "" (0 пробелов)
-    # Для строк с + и - на depth=0: должно быть 4 пробела
-    base_indent = "    " * depth
-    
+    indent = "  " * depth  # 2 пробела на уровень
     lines = []
-    
+
     for item in diff:
         key = item["name"]
         action = item["action"]
-        
+
         if action == "unchanged":
             value = format_value(item["value"], depth + 1)
-            lines.append(f"{base_indent}    {key}: {value}")
+            lines.append(f"{indent}  {key}: {value}")
         elif action == "added":
             value = format_value(item["new_value"], depth + 1)
-            # На depth=0: base_indent="" + "  +" = "  +" (2 пробела) - НЕПРАВИЛЬНО
-            # Нужно: base_indent="" + "    +" = "    +" (4 пробела)
-            lines.append(f"{base_indent}    + {key}: {value}")
+            lines.append(f"{indent}+ {key}: {value}")
         elif action == "removed":
             value = format_value(item["old_value"], depth + 1)
-            lines.append(f"{base_indent}    - {key}: {value}")
+            lines.append(f"{indent}- {key}: {value}")
         elif action == "changed":
             old_value = format_value(item["old_value"], depth + 1)
             new_value = format_value(item["new_value"], depth + 1)
-            lines.append(f"{base_indent}    - {key}: {old_value}")
-            lines.append(f"{base_indent}    + {key}: {new_value}")
+            lines.append(f"{indent}- {key}: {old_value}")
+            lines.append(f"{indent}+ {key}: {new_value}")
         elif action == "nested":
             nested_diff = item["children"]
             formatted_nested = format_stylish(nested_diff, depth + 1)
-            lines.append(f"{base_indent}    {key}: {formatted_nested}")
-    
+            lines.append(f"{indent}  {key}: {formatted_nested}")
+
     result = "\n".join(lines)
     if depth == 0:
         return f"{{\n{result}\n}}"
-    return f"{{\n{result}\n{base_indent}}}"
+    return f"{{\n{result}\n{indent}}}"
