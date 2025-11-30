@@ -27,15 +27,14 @@ def format_stylish(diff, depth=0):
             lines.append(f"{indent}    {name}: {value}")
 
     if depth == 0:
-        return "{\n" + "\n".join(lines) + "\n}"
+        return "{\n" + "\n".join(lines) + "\n}\n"
     else:
         return "\n".join(lines)
-
 
 def format_value(value, depth):
     if value is None:
         return 'null'
-    elif value == '':  # Special case for empty string in default
+    elif value == '':  # Special case for empty string
         return ''
     elif isinstance(value, bool):
         return str(value).lower()
@@ -45,7 +44,6 @@ def format_value(value, depth):
         return format_dict(value, depth)
     else:
         return str(value)
-
 
 def format_dict(dictionary, depth):
     lines = []

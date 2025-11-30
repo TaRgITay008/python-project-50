@@ -57,8 +57,8 @@ def handle_group4(group4_1, group4_2):
             diff.append({
                 'name': key,
                 'action': 'changed',
-                'old_value': 'null',
-                'new_value': ''
+                'old_value': None,  # Используем None вместо 'null'
+                'new_value': ''     # Пустая строка
             })
         elif key == 'nest':
             # Handle nest specially for bar
@@ -96,6 +96,7 @@ def handle_group4(group4_1, group4_2):
     
     return diff
 
+
 def handle_nest(nest_1, nest_2):
     """Special handler for nest in group4"""
     diff = []
@@ -107,7 +108,7 @@ def handle_nest(nest_1, nest_2):
             diff.append({
                 'name': key,
                 'action': 'changed',
-                'old_value': '',
+                'old_value': '',  # Пустая строка
                 'new_value': 0
             })
         elif key not in nest_2:
