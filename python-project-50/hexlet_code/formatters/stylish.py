@@ -13,37 +13,18 @@ def format_stylish(diff, depth=0):
             lines.append(f"{indent}    }}")
         elif action == "added":
             new_value = format_value(item["new_value"], depth)
-            # Для пустых значений не добавляем пробел после двоеточия
-            if new_value == '':
-                lines.append(f"{indent}  + {name}:")
-            else:
-                lines.append(f"{indent}  + {name}: {new_value}")
+            lines.append(f"{indent}  + {name}: {new_value}")  # Пробел уже в new_value
         elif action == "removed":
             old_value = format_value(item["old_value"], depth)
-            # Для пустых значений не добавляем пробел после двоеточия
-            if old_value == '':
-                lines.append(f"{indent}  - {name}:")
-            else:
-                lines.append(f"{indent}  - {name}: {old_value}")
+            lines.append(f"{indent}  - {name}: {old_value}")  # Пробел уже в old_value
         elif action == "changed":
             old_value = format_value(item["old_value"], depth)
             new_value = format_value(item["new_value"], depth)
-            # Для пустых значений не добавляем пробел после двоеточия
-            if old_value == '':
-                lines.append(f"{indent}  - {name}:")
-            else:
-                lines.append(f"{indent}  - {name}: {old_value}")
-            if new_value == '':
-                lines.append(f"{indent}  + {name}:")
-            else:
-                lines.append(f"{indent}  + {name}: {new_value}")
+            lines.append(f"{indent}  - {name}: {old_value}")
+            lines.append(f"{indent}  + {name}: {new_value}")
         elif action == "unchanged":
             value = format_value(item["value"], depth)
-            # Для пустых значений не добавляем пробел после двоеточия
-            if value == '':
-                lines.append(f"{indent}    {name}:")
-            else:
-                lines.append(f"{indent}    {name}: {value}")
+            lines.append(f"{indent}    {name}: {value}")
 
     if depth == 0:
         return "{\n" + "\n".join(lines) + "\n}\n"
@@ -54,7 +35,7 @@ def format_value(value, depth):
     if value is None:
         return 'null'
     elif value == '':  # Special case for empty string
-        return ''  # Возвращаем пустую строку без пробелов
+        return ''  # Возвращаем пустую строку, пробел добавится в основном форматтере
     elif isinstance(value, bool):
         return str(value).lower()
     elif isinstance(value, (int, float)):
