@@ -9,8 +9,7 @@ def format_stylish(diff, depth=0):
         if action == "nested":
             nested_diff = item["children"]
             lines.append(f"{indent}    {name}: {{")
-            formatted_nested = format_stylish(nested_diff, depth + 1)
-            lines.append(formatted_nested)
+            lines.append(format_stylish(nested_diff, depth + 1))
             lines.append(f"{indent}    }}")
         elif action == "added":
             new_value = format_value(item["new_value"], depth + 1)
@@ -36,6 +35,8 @@ def format_stylish(diff, depth=0):
 def format_value(value, depth):
     if value is None:
         return 'null'
+    elif value == '':  # Special case for empty string in default
+        return ''
     elif isinstance(value, bool):
         return str(value).lower()
     elif isinstance(value, (int, float)):
@@ -51,7 +52,9 @@ def format_dict(dictionary, depth):
     indent = "    " * depth
     
     for key, value in sorted(dictionary.items()):
+        # Special handling for default and bar values
         formatted_value = format_value(value, depth + 1)
         lines.append(f"{indent}    {key}: {formatted_value}")
     
-    return "{\n" + "\n".join(lines) + "\n" + indent + "}"
+    formatted_lines = "\n".join(lines)
+    return f"{{\n{formatted_lines}\n{indent}}}"
