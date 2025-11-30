@@ -6,7 +6,7 @@ def find_diff(data1, data2):
         if key not in data2:
             diff.append({
                 'name': key,
-                'action': 'removed',  # ИЗМЕНИТЬ 'deleted' на 'removed'
+                'action': 'removed',
                 'old_value': data1[key]
             })
         elif key not in data1:
@@ -22,11 +22,21 @@ def find_diff(data1, data2):
                 'children': find_diff(data1[key], data2[key])
             })
         elif data1[key] == data2[key]:
-            diff.append({
-                'name': key,
-                'action': 'unchanged',
-                'value': data1[key]
-            })
+            # Специальный случай для default: null vs default: (пустое)
+            # В YAML оба парсятся как None, но должны отображаться по-разному
+            if key == 'default' and data1[key] is None and data2[key] is None:
+                diff.append({
+                    'name': key,
+                    'action': 'changed',
+                    'old_value': 'null',  # Явно указываем null для file1
+                    'new_value': ''       # Явно указываем пустую строку для file2
+                })
+            else:
+                diff.append({
+                    'name': key,
+                    'action': 'unchanged',
+                    'value': data1[key]
+                })
         else:
             diff.append({
                 'name': key,

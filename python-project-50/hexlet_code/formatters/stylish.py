@@ -1,50 +1,69 @@
-def format_value(value, depth):
+def format_value(value, indent_level=0):
     if value is None:
-        return "null"
-    if isinstance(value, bool):
+        return 'null'
+    elif value == '':  # Специальная обработка пустой строки
+        return ''
+    elif isinstance(value, bool):
         return str(value).lower()
-    if isinstance(value, dict):
-        indent = "  " * (depth + 1)  # 2 пробела на уровень
-        lines = []
-        for key, val in value.items():
-            formatted_value = format_value(val, depth + 1)
-            lines.append(f"{indent}{key}: {formatted_value}")
-        formatted = "\n".join(lines)
-        end_indent = "  " * depth
-        return f"{{\n{formatted}\n{end_indent}}}"
-    if value == "":
-        return ""
-    return str(value)
-
+    elif isinstance(value, (int, float)):
+        return str(value)
+    elif isinstance(value, dict):
+        return format_dict(value, indent_level)
+    else:
+        return str(value)
 
 def format_stylish(diff, depth=0):
-    indent = "  " * depth  # 2 пробела на уровень
     lines = []
-
+    indent = "    " * depth
     for item in diff:
-        key = item["name"]
+        name = item["name"]
         action = item["action"]
 
-        if action == "unchanged":
-            value = format_value(item["value"], depth + 1)
-            lines.append(f"{indent}  {key}: {value}")
+        if action == "nested":
+            nested_diff = item["children"]
+            lines.append(f"{indent}    {name}: {{")
+            formatted_nested = format_stylish(nested_diff, depth + 1)
+            lines.append(formatted_nested)
+            lines.append(f"{indent}    }}")
         elif action == "added":
-            value = format_value(item["new_value"], depth + 1)
-            lines.append(f"{indent}+ {key}: {value}")
+            new_value = format_value(item["new_value"], depth + 1)
+            lines.append(f"{indent}  + {name}: {new_value}")
         elif action == "removed":
-            value = format_value(item["old_value"], depth + 1)
-            lines.append(f"{indent}- {key}: {value}")
+            old_value = format_value(item["old_value"], depth + 1)
+            lines.append(f"{indent}  - {name}: {old_value}")
         elif action == "changed":
             old_value = format_value(item["old_value"], depth + 1)
             new_value = format_value(item["new_value"], depth + 1)
-            lines.append(f"{indent}- {key}: {old_value}")
-            lines.append(f"{indent}+ {key}: {new_value}")
-        elif action == "nested":
-            nested_diff = item["children"]
-            formatted_nested = format_stylish(nested_diff, depth + 1)
-            lines.append(f"{indent}  {key}: {formatted_nested}")
+            lines.append(f"{indent}  - {name}: {old_value}")
+            lines.append(f"{indent}  + {name}: {new_value}")
+        elif action == "unchanged":
+            value = format_value(item["value"], depth + 1)
+            lines.append(f"{indent}    {name}: {value}")
 
-    result = "\n".join(lines)
     if depth == 0:
-        return f"{{\n{result}\n}}"
-    return f"{{\n{result}\n{indent}}}"
+        return "{\n" + "\n".join(lines) + "\n}"
+    else:
+        return "\n".join(lines)
+
+
+def format_value(value, indent_level=0):
+    if value is None:
+        return 'null'
+    elif isinstance(value, bool):
+        return str(value).lower()
+    elif isinstance(value, (int, float)):
+        return str(value)
+    elif isinstance(value, dict):
+        return format_dict(value, indent_level)
+    else:
+        return str(value)
+
+
+def format_dict(dictionary, indent_level):
+    lines = []
+    indent = "    " * indent_level
+    for key, value in dictionary.items():
+        formatted_value = format_value(value, indent_level + 1)
+        lines.append(f"{indent}    {key}: {formatted_value}")
+    
+    return "{\n" + "\n".join(lines) + "\n" + indent + "}"
