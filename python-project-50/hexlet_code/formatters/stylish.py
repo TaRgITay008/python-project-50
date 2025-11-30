@@ -31,6 +31,7 @@ def format_stylish(diff, depth=0):
     else:
         return "\n".join(lines)
 
+
 def format_value(value, depth):
     if value is None:
         return 'null'
@@ -45,12 +46,12 @@ def format_value(value, depth):
     else:
         return str(value)
 
+
 def format_dict(dictionary, depth):
     lines = []
     indent = "    " * depth
     
     for key, value in sorted(dictionary.items()):
-        # Special handling for default and bar values
         formatted_value = format_value(value, depth + 1)
         lines.append(f"{indent}    {key}: {formatted_value}")
     
