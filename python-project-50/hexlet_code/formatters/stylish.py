@@ -12,8 +12,9 @@ def format_value(value, depth):
         formatted = "\n".join(lines)
         end_indent = "    " * depth
         return f"{{\n{formatted}\n{end_indent}}}"
+    if value == "":  # Для пустой строки возвращаем пробел
+        return " "
     return str(value)
-
 
 def format_stylish(diff, depth=0):
     indent = "    " * depth
