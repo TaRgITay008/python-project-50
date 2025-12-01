@@ -1,29 +1,29 @@
 def format_stylish(diff, depth=0):
-    indent = "    " * depth
     lines = []
+    indent = "    " * depth
     
-    for node in sorted(diff, key=lambda x: x["name"]):
-        key = node["name"]
-        state = node["action"]
+    for item in sorted(diff, key=lambda x: x["name"]):
+        key = item["name"]
+        status = item["action"]
         
-        if state == "nested":
-            children = node["children"]
+        if status == "nested":
+            children = item["children"]
             lines.append(f"{indent}    {key}: {{")
             lines.append(format_stylish(children, depth + 1))
             lines.append(f"{indent}    }}")
-        elif state == "added":
-            value = stringify(node["new_value"], depth + 1)
+        elif status == "added":
+            value = format_value(item["new_value"], depth)
             lines.append(f"{indent}  + {key}: {value}")
-        elif state == "removed":
-            value = stringify(node["old_value"], depth + 1)
+        elif status == "removed":
+            value = format_value(item["old_value"], depth)
             lines.append(f"{indent}  - {key}: {value}")
-        elif state == "changed":
-            old_value = stringify(node["old_value"], depth + 1)
-            new_value = stringify(node["new_value"], depth + 1)
+        elif status == "changed":
+            old_value = format_value(item["old_value"], depth)
+            new_value = format_value(item["new_value"], depth)
             lines.append(f"{indent}  - {key}: {old_value}")
             lines.append(f"{indent}  + {key}: {new_value}")
-        elif state == "unchanged":
-            value = stringify(node["value"], depth + 1)
+        elif status == "unchanged":
+            value = format_value(item["value"], depth)
             lines.append(f"{indent}    {key}: {value}")
     
     if depth == 0:
@@ -31,9 +31,9 @@ def format_stylish(diff, depth=0):
     return "\n".join(lines)
 
 
-def stringify(value, depth):
+def format_value(value, depth):
     if isinstance(value, dict):
-        return stringify_dict(value, depth)
+        return format_complex_value(value, depth)
     elif value is None:
         return "null"
     elif isinstance(value, bool):
@@ -46,13 +46,13 @@ def stringify(value, depth):
         return str(value)
 
 
-def stringify_dict(value, depth):
+def format_complex_value(value, depth):
     if not value:
         return "{}"
     
-    indent = "    " * depth
     lines = []
+    indent = "    " * depth
     for key, val in sorted(value.items()):
-        formatted = stringify(val, depth + 1)
-        lines.append(f"{indent}    {key}: {formatted}")
+        formatted_val = format_value(val, depth)
+        lines.append(f"{indent}    {key}: {formatted_val}")
     return "{\n" + "\n".join(lines) + "\n" + indent + "}"
