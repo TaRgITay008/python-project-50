@@ -1,12 +1,10 @@
 def format_stylish(diff, depth=0):
     lines = []
+    indent = "    " * depth
     
     for item in sorted(diff, key=lambda x: x["name"]):
         key = item["name"]
         status = item["action"]
-        
-        indent = "    " * depth
-        next_indent = "    " * (depth + 1)
         
         if status == "nested":
             children = item["children"]
@@ -14,19 +12,18 @@ def format_stylish(diff, depth=0):
             lines.append(format_stylish(children, depth + 1))
             lines.append(f"{indent}    }}")
         elif status == "added":
-            value = format_value(item["new_value"], depth + 1)
-            # Для depth=0: "  + key", для depth>0: "    " * depth + "  + key"
+            value = format_value(item["new_value"], depth)
             lines.append(f"{indent}  + {key}: {value}")
         elif status == "removed":
-            value = format_value(item["old_value"], depth + 1)
+            value = format_value(item["old_value"], depth)
             lines.append(f"{indent}  - {key}: {value}")
         elif status == "changed":
-            old_value = format_value(item["old_value"], depth + 1)
-            new_value = format_value(item["new_value"], depth + 1)
+            old_value = format_value(item["old_value"], depth)
+            new_value = format_value(item["new_value"], depth)
             lines.append(f"{indent}  - {key}: {old_value}")
             lines.append(f"{indent}  + {key}: {new_value}")
         elif status == "unchanged":
-            value = format_value(item["value"], depth + 1)
+            value = format_value(item["value"], depth)
             lines.append(f"{indent}    {key}: {value}")
     
     if depth == 0:
@@ -36,7 +33,7 @@ def format_stylish(diff, depth=0):
 
 def format_value(value, depth):
     if isinstance(value, dict):
-        return format_complex_value(value, depth)
+        return format_complex_value(value, depth + 1)
     elif value is None:
         return "null"
     elif isinstance(value, bool):
@@ -56,6 +53,6 @@ def format_complex_value(value, depth):
     lines = []
     indent = "    " * depth
     for key, val in sorted(value.items()):
-        formatted_val = format_value(val, depth + 1)
-        lines.append(f"{indent}        {key}: {formatted_val}")
-    return "{\n" + "\n".join(lines) + "\n" + indent + "    }"
+        formatted_val = format_value(val, depth)
+        lines.append(f"{indent}    {key}: {formatted_val}")
+    return "{\n" + "\n".join(lines) + "\n" + indent + "}"
