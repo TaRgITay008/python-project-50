@@ -54,6 +54,6 @@ def format_complex_value(value, depth):
     indent = "    " * depth
     for key, val in sorted(value.items()):
         formatted_val = format_value(val, depth + 1)
-        # Для вложенных значений внутри complex value нужен отступ 8 пробелов
+        # Для вложенных словарей внутри complex value
         lines.append(f"{indent}        {key}: {formatted_val}")
     return "{\n" + "\n".join(lines) + "\n" + indent + "    }"
