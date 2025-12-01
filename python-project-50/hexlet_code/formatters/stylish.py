@@ -49,7 +49,7 @@ def format_complex_value(value, depth):
         return "{}"
     
     lines = []
-    indent = "    " * depth
+    indent = "    " * (depth - 1) if depth > 0 else ""
     for key, val in sorted(value.items()):
         formatted_val = format_value(val, depth)
         lines.append(f"{indent}  {key}: {formatted_val}")
