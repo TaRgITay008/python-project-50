@@ -52,7 +52,8 @@ def format_complex_value(value, depth):
     indent = "    " * depth
     for key, val in sorted(value.items()):
         formatted_val = format_value(val, depth + 1)
-        lines.append(f"{indent}      {key}: {formatted_val}")
+        lines.append(f"{indent}  {key}: {formatted_val}")
     
-    result = "{\n" + "\n".join(lines) + "\n" + indent + "    }"
+    result = "{\n" + "\n".join(lines) + "\n" + indent + "}"
     return result
+
