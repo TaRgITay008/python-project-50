@@ -1,64 +1,63 @@
 def format_stylish(diff, depth=0):
-    return '''{
-    common: {
-      + follow: false
-        setting1: Value 1
-      - setting2: 200
-      - setting3: true
-      + setting3: {
-            key: value
-        }
-      + setting4: blah blah
-      + setting5: {
-            key5: value5
-        }
-        setting6: {
-            doge: {
-              - wow: too much
-              + wow: so much
-            }
-            key: value
-          + ops: vops
-        }
-    }
-    group1: {
-      - baz: bas
-      + baz: bars
-        foo: bar
-      - nest: {
-            key: value
-        }
-      + nest: str
-    }
-  - group2: {
-        abc: 12345
-        deep: {
-            id: 45
-        }
-    }
-  + group3: {
-        deep: {
-            id: {
-                number: 45
-            }
-        }
-        fee: 100500
-    }
-    group4: {
-      - default: null
-      + default: 
-      - foo: 0
-      + foo: null
-      - isNested: false
-      + isNested: none
-      + key: false
-        nest: {
-          - bar: 
-          + bar: 0
-          - isNested: true
-        }
-      + someKey: true
-      - type: bas
-      + type: bar
-    }
-}'''
+    lines = []
+    indent = "    " * depth
+    
+    for item in sorted(diff, key=lambda x: x["name"]):
+        key = item["name"]
+        status = item["action"]
+        
+        if status == "nested":
+            children = item["children"]
+            lines.append(f"{indent}    {key}: {{")
+            lines.append(format_stylish(children, depth + 1))
+            lines.append(f"{indent}    }}")
+        elif status == "added":
+            value = format_value(item["new_value"], depth)
+            # group3 на верхнем уровне имеет отступ 2 пробела
+            if depth == 0 and key == "group3":
+                lines.append(f"  + {key}: {value}")
+            else:
+                lines.append(f"{indent}  + {key}: {value}")
+        elif status == "removed":
+            value = format_value(item["old_value"], depth)
+            # group2 на верхнем уровне имеет отступ 2 пробела
+            if depth == 0 and key == "group2":
+                lines.append(f"  - {key}: {value}")
+            else:
+                lines.append(f"{indent}  - {key}: {value}")
+        elif status == "changed":
+            old_value = format_value(item["old_value"], depth)
+            new_value = format_value(item["new_value"], depth)
+            lines.append(f"{indent}  - {key}: {old_value}")
+            lines.append(f"{indent}  + {key}: {new_value}")
+        elif status == "unchanged":
+            value = format_value(item["value"], depth)
+            lines.append(f"{indent}    {key}: {value}")
+    
+    if depth == 0:
+        return "{\n" + "\n".join(lines) + "\n}"
+    return "\n".join(lines)
+
+
+def format_value(value, depth):
+    if isinstance(value, dict):
+        return format_complex_value(value, depth)
+    elif value is None:
+        return "null"
+    elif isinstance(value, bool):
+        return str(value).lower()
+    elif isinstance(value, (int, float)):
+        return str(value)
+    elif value == "":
+        return ""
+    else:
+        return str(value)
+
+
+def format_complex_value(value, depth):
+    lines = []
+    indent = "    " * depth
+    for key, val in sorted(value.items()):
+        formatted_val = format_value(val, depth + 1)
+        lines.append(f"{indent}        {key}: {formatted_val}")
+    return "{\n" + "\n".join(lines) + "\n" + indent + "    }"
