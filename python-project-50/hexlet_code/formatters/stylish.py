@@ -40,8 +40,6 @@ def format_value(value, depth):
         return str(value).lower()
     elif isinstance(value, (int, float)):
         return str(value)
-    elif value == "":
-        return ""
     else:
         return str(value)
 
@@ -54,5 +52,7 @@ def format_complex_value(value, depth):
     indent = "    " * depth
     for key, val in sorted(value.items()):
         formatted_val = format_value(val, depth + 1)
-        lines.append(f"{indent}        {key}: {formatted_val}")
-    return "{\n" + "\n".join(lines) + "\n" + indent + "    }"
+        lines.append(f"{indent}    {key}: {formatted_val}")
+    
+    result = "{\n" + "\n".join(lines) + "\n" + indent + "}"
+    return result
