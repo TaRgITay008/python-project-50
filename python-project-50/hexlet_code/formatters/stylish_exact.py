@@ -1,9 +1,9 @@
 def format_stylish(diff, depth=0):
-    """Универсальный форматтер соответствующий Hexlet"""
+    """Точная реализация по образцу ожидаемого вывода Hexlet"""
     lines = []
     indent = "    " * depth
     
-    for item in sorted(diff, key=lambda x: x["name"]):
+    for item in diff:
         key = item["name"]
         status = item["action"]
         
@@ -14,18 +14,10 @@ def format_stylish(diff, depth=0):
             lines.append(f"{indent}    }}")
         elif status == "added":
             value = format_value(item["new_value"], depth)
-            # Для group3 на верхнем уровне - особый отступ
-            if depth == 0 and key == "group3":
-                lines.append(f"  + {key}: {value}")
-            else:
-                lines.append(f"{indent}  + {key}: {value}")
+            lines.append(f"{indent}  + {key}: {value}")
         elif status == "removed":
             value = format_value(item["old_value"], depth)
-            # Для group2 на верхнем уровне - особый отступ
-            if depth == 0 and key == "group2":
-                lines.append(f"  - {key}: {value}")
-            else:
-                lines.append(f"{indent}  - {key}: {value}")
+            lines.append(f"{indent}  - {key}: {value}")
         elif status == "changed":
             old_value = format_value(item["old_value"], depth)
             new_value = format_value(item["new_value"], depth)
@@ -36,7 +28,8 @@ def format_stylish(diff, depth=0):
             lines.append(f"{indent}    {key}: {value}")
     
     if depth == 0:
-        return "{\n" + "\n".join(lines) + "\n}"
+        result = "{\n" + "\n".join(lines) + "\n}"
+        return result
     return "\n".join(lines)
 
 
