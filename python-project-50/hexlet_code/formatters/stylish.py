@@ -30,7 +30,6 @@ def format_stylish(diff, depth=0):
         return "{\n" + "\n".join(lines) + "\n}"
     return "\n".join(lines)
 
-
 def format_value(value, depth):
     if isinstance(value, dict):
         return format_complex_value(value, depth)
@@ -42,7 +41,6 @@ def format_value(value, depth):
         return str(value)
     else:
         return str(value)
-
 
 def format_complex_value(value, depth):
     if not value:
