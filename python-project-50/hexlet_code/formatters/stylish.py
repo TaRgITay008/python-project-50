@@ -1,10 +1,12 @@
 def format_stylish(diff, depth=0):
     lines = []
-    indent = "    " * depth
     
     for item in sorted(diff, key=lambda x: x["name"]):
         key = item["name"]
         status = item["action"]
+        
+        indent = "    " * depth
+        next_indent = "    " * (depth + 1)
         
         if status == "nested":
             children = item["children"]
@@ -13,6 +15,7 @@ def format_stylish(diff, depth=0):
             lines.append(f"{indent}    }}")
         elif status == "added":
             value = format_value(item["new_value"], depth + 1)
+            # Для depth=0: "  + key", для depth>0: "    " * depth + "  + key"
             lines.append(f"{indent}  + {key}: {value}")
         elif status == "removed":
             value = format_value(item["old_value"], depth + 1)
@@ -54,6 +57,5 @@ def format_complex_value(value, depth):
     indent = "    " * depth
     for key, val in sorted(value.items()):
         formatted_val = format_value(val, depth + 1)
-        # Для вложенных словарей внутри complex value
         lines.append(f"{indent}        {key}: {formatted_val}")
     return "{\n" + "\n".join(lines) + "\n" + indent + "    }"
