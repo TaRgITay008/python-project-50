@@ -1,53 +1,58 @@
-SEPARATOR = " "
-ADD = '+ '
-DEL = '- '
-NONE = '  '
-
-
-def format_value(value, spaces_count=2):
-    if value is None:
-        return "null"
-    if isinstance(value, bool):
-        return str(value).lower()
-    if isinstance(value, dict):
-        indent = SEPARATOR * (spaces_count + 4)
-        result_lines = []
-        for key, inner_value in value.items():
-            formatted_value = format_value(inner_value, spaces_count + 4)
-            result_lines.append(f"{indent}{NONE}{key}: {formatted_value}")
-        formatted_string = '\n'.join(result_lines)
-        end_indent = SEPARATOR * (spaces_count + 2)
-        return f"{{\n{formatted_string}\n{end_indent}}}"
-    return f"{value}"
-
-
-def make_stylish_diff(diff, spaces_count=2):
-    indent = SEPARATOR * spaces_count
+def format_stylish(diff, depth=0):
     lines = []
-    for item in diff:
-        key = item['name']
-        action = item['action']
-        value = format_value(item.get('value'), spaces_count)
-        old_value = format_value(item.get('old_value'), spaces_count)
-        new_value = format_value(item.get('new_value'), spaces_count)
+    indent = "    " * depth
+    
+    for item in sorted(diff, key=lambda x: x["name"]):
+        key = item["name"]
+        status = item["action"]
+        
+        if status == "nested":
+            children = item["children"]
+            lines.append(f"{indent}    {key}: {{")
+            lines.append(format_stylish(children, depth + 1))
+            lines.append(f"{indent}    }}")
+        elif status == "added":
+            value = format_value(item["new_value"], depth)
+            lines.append(f"{indent}  + {key}: {value}" if depth == 0 else f"{indent} + {key}: {value}")
+        elif status == "removed":
+            value = format_value(item["old_value"], depth)
+            lines.append(f"{indent}  - {key}: {value}" if depth == 0 else f"{indent} - {key}: {value}")
+        elif status == "changed":
+            old_value = format_value(item["old_value"], depth)
+            new_value = format_value(item["new_value"], depth)
+            lines.append(f"{indent}  - {key}: {old_value}" if depth == 0 else f"{indent} - {key}: {old_value}")
+            lines.append(f"{indent}  + {key}: {new_value}" if depth == 0 else f"{indent} + {key}: {new_value}")
+        elif status == "unchanged":
+            value = format_value(item["value"], depth)
+            lines.append(f"{indent}    {key}: {value}")
+    
+    if depth == 0:
+        return "{\n" + "\n".join(lines) + "\n}"
+    return "\n".join(lines)
 
-        if action == "unchanged":
-            lines.append(f"{indent}{NONE}{key}: {value}")
-        elif action == "modified":
-            lines.append(f"{indent}{DEL}{key}: {old_value}")
-            lines.append(f"{indent}{ADD}{key}: {new_value}")
-        elif action == "deleted":
-            lines.append(f"{indent}{DEL}{key}: {old_value}")
-        elif action == "added":
-            lines.append(f"{indent}{ADD}{key}: {new_value}")
-        elif action == 'nested':
-            children = make_stylish_diff(item.get("children"), spaces_count + 4)
-            lines.append(f"{indent}{NONE}{key}: {children}")
-    formatted_string = '\n'.join(lines)
-    end_indent = SEPARATOR * (spaces_count - 2)
 
-    return f"{{\n{formatted_string}\n{end_indent}}}"
+def format_value(value, depth):
+    if isinstance(value, dict):
+        return format_complex_value(value, depth)
+    elif value is None:
+        return "null"
+    elif isinstance(value, bool):
+        return str(value).lower()
+    elif isinstance(value, (int, float)):
+        return str(value)
+    else:
+        return str(value)
 
 
-def format_diff_stylish(data):
-    return make_stylish_diff(data)
+def format_complex_value(value, depth):
+    if not value:
+        return "{}"
+    
+    lines = []
+    indent = "    " * depth
+    for key, val in sorted(value.items()):
+        formatted_val = format_value(val, depth)
+        lines.append(f"{indent}  {key}: {formatted_val}")
+    
+    result = "{\n" + "\n".join(lines) + "\n" + indent + "}"
+    return result
