@@ -8,27 +8,38 @@ def format_stylish(diff, depth=0):
         
         if status == "nested":
             children = item["children"]
-            lines.append(f"{indent}    {key}: {{")
+            lines.append(f"{indent}  {key}: {{")
             lines.append(format_stylish(children, depth + 1))
-            lines.append(f"{indent}    }}")
+            lines.append(f"{indent}  }}")
         elif status == "added":
             value = format_value(item["new_value"], depth + 1)
-            lines.append(f"{indent} + {key}: {value}")
+            if depth == 0:
+                lines.append(f"{indent}  + {key}: {value}")
+            else:
+                lines.append(f"{indent} + {key}: {value}")
         elif status == "removed":
             value = format_value(item["old_value"], depth + 1)
-            lines.append(f"{indent} - {key}: {value}")
+            if depth == 0:
+                lines.append(f"{indent}  - {key}: {value}")
+            else:
+                lines.append(f"{indent} - {key}: {value}")
         elif status == "changed":
             old_value = format_value(item["old_value"], depth + 1)
             new_value = format_value(item["new_value"], depth + 1)
-            lines.append(f"{indent} - {key}: {old_value}")
-            lines.append(f"{indent} + {key}: {new_value}")
+            if depth == 0:
+                lines.append(f"{indent}  - {key}: {old_value}")
+                lines.append(f"{indent}  + {key}: {new_value}")
+            else:
+                lines.append(f"{indent} - {key}: {old_value}")
+                lines.append(f"{indent} + {key}: {new_value}")
         elif status == "unchanged":
             value = format_value(item["value"], depth + 1)
-            lines.append(f"{indent}    {key}: {value}")
+            lines.append(f"{indent}  {key}: {value}")
     
     if depth == 0:
         return "{\n" + "\n".join(lines) + "\n}"
     return "\n".join(lines)
+
 
 def format_value(value, depth):
     if isinstance(value, dict):
@@ -41,6 +52,7 @@ def format_value(value, depth):
         return str(value)
     else:
         return str(value)
+
 
 def format_complex_value(value, depth):
     if not value:
