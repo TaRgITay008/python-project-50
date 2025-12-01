@@ -2,15 +2,18 @@ def format_stylish(diff, depth=0):
     """Format diff in stylish format with exact indentation"""
     lines = []
     indent = "  " * depth
-    
+
     for key in sorted(diff.keys()):
         node = diff[key]
         node_type = node['type']
-        
+
         if node_type == 'nested':
-            lines.append(f"{indent}  {key}: {{")
+            # Для nested-узлов: начальный отступ = depth + 2 уровня (т.е. +4 пробела)
+            nested_indent = "  " * (depth + 2)
+            lines.append(f"{nested_indent}{key}: {{")
+            # Рекурсивно обрабатываем детей с глубиной depth + 2
             lines.extend(format_stylish(node['children'], depth + 2))
-            lines.append(f"{indent}  }}")
+            lines.append(f"{nested_indent}}}")
         elif node_type == 'added':
             value_str = format_value(node['value'], depth + 2)
             lines.append(f"{indent}+ {key}: {value_str}")
@@ -25,7 +28,7 @@ def format_stylish(diff, depth=0):
         elif node_type == 'unchanged':
             value_str = format_value(node['value'], depth + 2)
             lines.append(f"{indent}  {key}: {value_str}")
-    
+
     return lines
 
 def format_value(value, depth=0):
