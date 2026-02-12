@@ -26,9 +26,9 @@ def make_plain_item(item, path=''):
 
     if action == 'added':
         return f"{PROP}'{current_path}'{ADD}{new_value}"
-    if action == 'deleted':
+    if action == 'deleted' or action == 'removed':
         return f"{PROP}'{current_path}'{REMOVE}"
-    if action == 'modified':
+    if action == 'modified' or action == 'changed':
         return f"{PROP}'{current_path}'{UPD}{old_value}{UPD2}{new_value}"
     if action == 'nested':
         children = item.get('children')
