@@ -14,15 +14,15 @@ def format_stylish(diff, depth=0):
             lines.append(f"{current_indent}    }}")
         elif status == "added":
             value = format_value(item["new_value"], depth + 1)
-            lines.append(f"{current_indent}  + {key}: {value}")  # ВЕРНУЛИ ПРОБЕЛ!
+            lines.append(f"{current_indent}   + {key}: {value}")  # 3 пробела!
         elif status == "removed":
             value = format_value(item["old_value"], depth + 1)
-            lines.append(f"{current_indent}  - {key}: {value}")  # ВЕРНУЛИ ПРОБЕЛ!
+            lines.append(f"{current_indent}   - {key}: {value}")  # 3 пробела!
         elif status == "changed":
             old_value = format_value(item["old_value"], depth + 1)
             new_value = format_value(item["new_value"], depth + 1)
-            lines.append(f"{current_indent}  - {key}: {old_value}")  # ВЕРНУЛИ ПРОБЕЛ!
-            lines.append(f"{current_indent}  + {key}: {new_value}")  # ВЕРНУЛИ ПРОБЕЛ!
+            lines.append(f"{current_indent}   - {key}: {old_value}")  # 3 пробела!
+            lines.append(f"{current_indent}   + {key}: {new_value}")  # 3 пробела!
         elif status == "unchanged":
             value = format_value(item["value"], depth + 1)
             lines.append(f"{current_indent}    {key}: {value}")
