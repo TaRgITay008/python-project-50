@@ -1,5 +1,8 @@
+import json
+
+
 def get_indent(depth):
-    return ' ' * (depth * 4)
+    return ' ' * ((depth - 1) * 4)
 
 
 def get_sign_indent(depth):
@@ -30,7 +33,7 @@ def stringify(value, depth):
     return "{\n" + result + "\n" + get_indent(depth) + "}"
 
 
-def stylish(tree, depth=1):
+def render_stylish(tree, depth=1):
     lines = []
 
     for node in tree:
@@ -38,7 +41,7 @@ def stylish(tree, depth=1):
         node_type = node["type"]
 
         if node_type == "nested":
-            children = stylish(node["children"], depth + 1)
+            children = render_stylish(node["children"], depth + 1)
             lines.append(f"{get_indent(depth)}  {key}: {children}")
 
         elif node_type == "added":

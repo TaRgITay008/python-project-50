@@ -1,0 +1,11 @@
+Metadata-Version: 2.4
+Name: hexlet-code
+Version: 1.0.0
+Summary: Difference Calculator
+Author-email: TaRgITay008 <your-email@example.com>
+Requires-Python: >=3.10
+Requires-Dist: pyyaml>=6.0
+Provides-Extra: dev
+Requires-Dist: pytest>=7.0; extra == "dev"
+Requires-Dist: pytest-cov>=4.0; extra == "dev"
+Requires-Dist: ruff<=0.9.7; extra == "dev"

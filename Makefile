@@ -1,13 +1,3 @@
-install:
-uv sync
-
 test:
-uv run pytest -vv --color=yes --exitfirst tests
+	uv run pytest
 
-lint:
-uv run ruff check hexlet_code tests
-
-build:
-@echo "Build complete"
-
-setup: install build
