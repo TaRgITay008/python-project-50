@@ -1,7 +1,7 @@
 ### Hexlet tests and linter status:
 
-[![Actions Status](https://github.com/lyovaparsyan94/python-project-50/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/lyovaparsyan94/python-project-50/actions)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=lyovaparsyan94_python-project-50&metric=coverage)](https://sonarcloud.io/summary/new_code?id=lyovaparsyan94_python-project-50)
+[![Actions Status](https://github.com/TaRgITay008/python-project-50/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/TaRgITay008/python-project-50/actions)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=TaRgITay008_python-project-50&metric=coverage)](https://sonarcloud.io/summary/new_code?id=TaRgITay008_python-project-50)
 # Difference Calculator (gendiff)
 
 - gendiff is a command-line tool for finding differences between files. This is the second project developed as part of
@@ -19,7 +19,7 @@
 ## Installation:
 
 ``` 
-git clone git@github.com:lyovaparsyan94/python-project-50.git
+git clone git@github.com:TaRgITay008/python-project-50.git
 ```
 
 ````
