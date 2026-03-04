@@ -89,3 +89,8 @@ Running Tests
 ```
 make test-coverage
 ```
+## 🎥 Демонстрация работы
+
+Посмотрите, как утилита сравнивает файлы в формате JSON:
+
+[![asciicast](https://asciinema.org/a/0Wbw4KQ7JPpIez57.svg)](https://asciinema.org/a/0Wbw4KQ7JPpIez57)
