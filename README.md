@@ -91,10 +91,17 @@ make test-coverage
 ```
 ## 🎥 Демонстрация работы
 
-Посмотрите, как утилита сравнивает файлы в формате JSON:
+### Формат Stylish (по умолчанию)
+Древовидный вывод для наглядного сравнения:
 
 [![asciicast](https://asciinema.org/a/0Wbw4KQ7JPpIez57.svg)](https://asciinema.org/a/0Wbw4KQ7JPpIez57)
+
 ### Формат Plain
-Текстовое описание изменений:
+Краткое текстовое описание изменений:
 
 [![asciicast](https://asciinema.org/a/CCX0CRCtyWd9qlUk.svg)](https://asciinema.org/a/CCX0CRCtyWd9qlUk)
+
+### Формат JSON
+Структурированный вывод для автоматической обработки:
+
+[![asciicast](https://asciinema.org/a/wam1HYnsW8G5JOcr.svg)](https://asciinema.org/a/wam1HYnsW8G5JOcr)
