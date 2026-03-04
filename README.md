@@ -91,17 +91,21 @@ make test-coverage
 ```
 ## 🎥 Демонстрация работы
 
-### Формат Stylish (по умолчанию)
-Древовидный вывод для наглядного сравнения:
+### Demo №1: Установка и справка
+[![asciicast](https://asciinema.org/a/hlYQ4oCG2NEIM615.svg)](https://asciinema.org/a/hlYQ4oCG2NEIM615)
 
+### Demo №2: JSON → Stylish (по умолчанию)
+Сравнение JSON-файлов с древовидным выводом:
 [![asciicast](https://asciinema.org/a/0Wbw4KQ7JPpIez57.svg)](https://asciinema.org/a/0Wbw4KQ7JPpIez57)
 
-### Формат Plain
-Краткое текстовое описание изменений:
+### Demo №3: YAML → Stylish
+Сравнение YAML-файлов в том же формате:
+[![asciicast](https://asciinema.org/a/d00ciMb97Y84mCFM.svg)](https://asciinema.org/a/d00ciMb97Y84mCFM)
 
+### Demo №4: Plain формат
+Краткое текстовое описание изменений:
 [![asciicast](https://asciinema.org/a/CCX0CRCtyWd9qlUk.svg)](https://asciinema.org/a/CCX0CRCtyWd9qlUk)
 
-### Формат JSON
+### Demo №5: JSON формат
 Структурированный вывод для автоматической обработки:
-
 [![asciicast](https://asciinema.org/a/wam1HYnsW8G5JOcr.svg)](https://asciinema.org/a/wam1HYnsW8G5JOcr)
